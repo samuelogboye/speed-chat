@@ -17,8 +17,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI')
 # Initialize SQLAlchemy with your Flask app
 db.init_app(app)
 
-# db = SQLAlchemy(app)
-
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -26,11 +24,6 @@ def index():
     if reg_form.validate_on_submit():
         username = reg_form.username.data
         password = reg_form.password.data
-
-        # check username exists
-        user_object = User.query.filter_by(username=username).first()
-        if user_object:
-            return "Someone else has taken this username!"
 
         # Add user to database
         user = User(username=username, password=password)
