@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 import os
 from models import db, User
 from passlib.hash import pbkdf2_sha256
+from flask_login import LoginManager, login_user, current_user, login_required, logout_user
 
 # Load environment variables from .env
 load_dotenv()
@@ -18,6 +19,12 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI')
 # Initialize SQLAlchemy with your Flask app
 db.init_app(app)
 
+login = LoginManager(app)
+login.init_app(app)
+
+@login.user_loader
+def load_user(id):
+    return User.query.get(int(id))
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -46,9 +53,24 @@ def login():
 
     # Allow login if validation success
     if login_form.validate_on_submit():
-        return "Logged in, finally!"
+        user_object = User.query.filter_by(username=login_form.username.data).first()
+        login_user(user_object)
+
+        return redirect(url_for('chat'))
 
     return render_template('login.html', form=login_form)
+
+@app.route('/chat', methods=['GET', 'POST'])
+def chat():
+    if not current_user.is_authenticated:
+        return "Please login before accessing chat"
+    return "Chat with me"
+
+
+@app.route('/logout', methods=['GET'])
+def logout():
+    logout_user()
+    return "Logged out using flask-login!"
 
 
 if __name__ == '__main__':
