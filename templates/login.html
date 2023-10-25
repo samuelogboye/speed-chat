@@ -1,0 +1,20 @@
+{% from 'form_helper.html' import displayField %} {% extends
+"prelogin-layout.html" %} {% block title %}Login{% endblock %} {% block body %}
+<div class="container">
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3">
+      <h1>Login</h1>
+      <p>Enter your Username/Password to start SpeedChat.</p>
+      <form action="{{ url_for('login') }}" method="post" role="form">
+        {{ form.hidden_tag() }} {{ displayField(form.username) }} {{
+        displayField(form.password) }}
+        <div>{{ form.submit_button }}</div>
+      </form>
+    </div>
+  </div>
+</div>
+
+  {{ form.csrf_token }}
+</form>
+{% endblock %}
+
