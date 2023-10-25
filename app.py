@@ -1,5 +1,5 @@
 from time import localtime, strftime
-from flask import Flask, render_template, redirect, url_for, flash
+from flask import Flask, render_template, redirect, url_for, flash, jsonify
 from wtform_fields import RegistrationForm, LoginForm
 from dotenv import load_dotenv
 import os
@@ -67,6 +67,29 @@ def login():
         return redirect(url_for('chat'))
 
     return render_template('login.html', form=login_form)
+
+# @app.route('/delete/<username>', methods=['DELETE'])
+# def delete_account(username):
+#     user = User.query.filter_by(username=username).first()
+#     if not user:
+#         return jsonify({'message': 'User does not exist'}), 404
+#     db.session.delete(user)
+#     db.session.commit()
+#     return jsonify({'message': 'User deleted successfully'}), 200
+
+
+# @app.route('/get-all', methods=['GET'])
+# def get_all_users():
+#     users = User.query.all()
+#     output = []
+#     for user in users:
+#         user_data = {}
+#         user_data['id'] = user.id
+#         user_data['username'] = user.username
+#         user_data['password'] = user.password
+#         output.append(user_data)
+#     return jsonify({'users': output})
+
 
 @app.route('/chat', methods=['GET', 'POST'])
 def chat():
