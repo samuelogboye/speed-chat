@@ -3,6 +3,7 @@ from wtform_fields import RegistrationForm, LoginForm
 from dotenv import load_dotenv
 import os
 from models import db, User
+from passlib.hash import pbkdf2_sha256
 
 # Load environment variables from .env
 load_dotenv()
@@ -27,8 +28,10 @@ def index():
         username = reg_form.username.data
         password = reg_form.password.data
 
+        password_hash = pbkdf2_sha256.hash(password)
+
         # Add user to database
-        user = User(username=username, password=password)
+        user = User(username=username, password=password_hash)
         db.session.add(user)
         db.session.commit()
         return redirect(url_for('login'))
